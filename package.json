@@ -1,0 +1,30 @@
+{
+  "name": "coursework-tracker",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^8.6.0",
+    "pinia": "^2.0.14",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@iconify-json/ic": "^1.1.4",
+    "@iconify-json/mdi": "^1.1.9",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "naive-ui": "^2.30.3",
+    "typescript": "^4.5.4",
+    "unplugin-auto-import": "^0.8.8",
+    "unplugin-icons": "^0.14.3",
+    "unplugin-vue-components": "^0.19.6",
+    "vite": "^2.9.9",
+    "vite-plugin-pwa": "^0.12.0",
+    "vite-plugin-windicss": "^1.8.4",
+    "vue-tsc": "^0.34.7",
+    "windicss": "^3.5.4"
+  }
+}
