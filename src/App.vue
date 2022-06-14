@@ -103,7 +103,8 @@
       </div>
     </div>
 
-    <n-modal :show="subjectModal" @mask-click="resetTempVars">
+    <n-modal :show="subjectModal" @mask-click="resetTempVars"
+      style="position: fixed; left: 50%; transform: translateX(-50%); top: 100px">
       <n-card style="width: 400px" title="Add Subject">
         <n-form-item label="Name">
           <n-input v-model:value="subName"></n-input>
@@ -116,7 +117,8 @@
       <n-collapse class="max-w-[500px] mt-3">
         <n-card>
           <n-collapse-item v-for="(d, i) in pinia.data" key="i">
-            <n-modal :show="courseworkModal" @mask-click="resetTempVars">
+            <n-modal :show="courseworkModal" @mask-click="resetTempVars"
+              style="position: fixed; left: 50%; transform: translateX(-50%); top: 100px">
               <n-card style="width: 400px" title="Add Coursework">
                 <div class="flex justify-center">
                   <div class="w-[300px]">
