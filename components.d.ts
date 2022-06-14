@@ -28,9 +28,11 @@ declare module '@vue/runtime-core' {
     NH2: typeof import('naive-ui')['NH2']
     NInput: typeof import('naive-ui')['NInput']
     NInputNumber: typeof import('naive-ui')['NInputNumber']
+    NLabel: typeof import('naive-ui')['NLabel']
     NModal: typeof import('naive-ui')['NModal']
     NPageHeader: typeof import('naive-ui')['NPageHeader']
     NProgress: typeof import('naive-ui')['NProgress']
+    NText: typeof import('naive-ui')['NText']
     NTooltip: typeof import('naive-ui')['NTooltip']
     ReloadPrompt: typeof import('./src/components/ReloadPrompt.vue')['default']
   }
