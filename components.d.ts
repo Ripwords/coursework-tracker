@@ -13,6 +13,7 @@ declare module '@vue/runtime-core' {
     'IIc:roundGithubFilled': typeof import('~icons/ic/round-github-filled')['default']
     'IIc:roundLightMode': typeof import('~icons/ic/round-light-mode')['default']
     'IMdi:github': typeof import('~icons/mdi/github')['default']
+    NAlert: typeof import('naive-ui')['NAlert']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NCollapse: typeof import('naive-ui')['NCollapse']

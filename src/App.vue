@@ -166,6 +166,20 @@
                     :percentage="percentage(i)" />
                   <n-progress v-else type="circle" color="red" :percentage="percentage(i)" />
                 </div>
+                <div class="flex justify-center mb-5">
+                  <div v-if="percentage(i) > 100 && target != ''">
+                    <n-alert type="warning">
+                      <template #header>
+                        Not possible to get {{ target }}
+                      </template>
+                    </n-alert>
+                  </div>
+                  <div v-else-if="percentage(i) > 100 && target == ''">
+                    <n-alert title="Not possible to get A" type="warning">
+
+                    </n-alert>
+                  </div>
+                </div>
                 <div class="ml-1" v-for="(x, y) in pinia.data[i].cw" key="i">
                   <n-card>
                     <template #header>
