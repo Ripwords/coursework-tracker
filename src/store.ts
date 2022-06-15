@@ -3,6 +3,7 @@ import { useStorage } from '@vueuse/core'
 
 export  const store = defineStore('store', {
   state: () => ({
+    user: {} as any,
     data: useStorage('data', [] as {
       name: string,
       cw: any
