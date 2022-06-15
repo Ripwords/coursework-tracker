@@ -2,6 +2,7 @@
 import { useNotification } from 'naive-ui'
 import { Auth, getAuth, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth'
 import { store } from '../store'
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from 'firebase/firestore'
 
 let auth: Auth
 const pinia = store()
@@ -9,12 +10,27 @@ const notification = useNotification()
 const props = defineProps(["theme"])
 const emits = defineEmits(["themeChange", "signedOut", "signedIn"])
 
+const hydratePiniaFromFirestore = async () => {
+  const db = getFirestore()
+  const docRef = collection(db, 'users', pinia.user.email, "data")
+  const docSnap = await getDocs(docRef)
+
+  if (!docSnap.empty) {
+    const returnData = docSnap.docs.map(doc => doc.data())
+    const returnDataArray = returnData.map(item => Object.values(item)[0])
+    pinia.data = returnDataArray
+  } else {
+    await setDoc(doc(db, 'users', pinia.user.email), { init: "_" })
+  }
+}
+
 const logout = () => {
   signOut(auth).then(() => {
     notification['success']({
       content: 'Signed out!',
       duration: 3000,
     })
+    pinia.data = []
     emits("signedOut")
   })
 }
@@ -23,11 +39,13 @@ onMounted(() => {
   auth = getAuth()
   if (auth.currentUser) {
     pinia.user = auth.currentUser
+    hydratePiniaFromFirestore()
   }
   getRedirectResult(auth)
     .then((result) => {
       if (result?.user) {
         pinia.user = result.user
+        hydratePiniaFromFirestore()        
         emits("signedIn")
         notification['success']({
           content: 'Signed in!',
@@ -38,11 +56,11 @@ onMounted(() => {
   onAuthStateChanged(auth, user => {
     if (user) {
       pinia.user = user
+      hydratePiniaFromFirestore()
     } else {
       pinia.user = {}
     }
   })
-
 })
 </script>
 

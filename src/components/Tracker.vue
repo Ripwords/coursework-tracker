@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { deleteDoc, doc, getFirestore, setDoc } from 'firebase/firestore';
 import { store } from '../store'
 
 const pinia = store()
@@ -8,6 +9,47 @@ const subName = ref("")
 const cwName = ref("")
 const cwWeight = ref("")
 const target = ref("A")
+const targetOptions = [
+  {
+    label: "A+",
+    key: "A+"
+  },
+  {
+    label: "A",
+    key: "A"
+  },
+  {
+    label: "A-",
+    key: "A-"
+  },
+  {
+    label: "B+",
+    key: "B+"
+  },
+  {
+    label: "B",
+    key: "B"
+  },
+  {
+    label: "B-",
+    key: "B-"
+  },
+  {
+    label: "C+",
+    key: "C+"
+  },
+  {
+    label: "C",
+    key: "C"
+  },
+  {
+    label: "D",
+    key: "D"
+  }
+]
+const handleSelect = (key: string) => {
+  target.value = key
+}
 const getGrade = () => {
   target.value = target.value.toUpperCase()
   if (target.value === "A+") {
@@ -32,6 +74,7 @@ const getGrade = () => {
     return 80
   }
 }
+
 const percentage = (i: number) => {
   const cw = pinia.data[i].cw
   const grades = cw.map((c: any) => Number(c.weight) * (Number(c.grade) / Number(c.maxGrade)))
@@ -46,12 +89,21 @@ const getScore = (i: number, y: number) => {
   const cw = pinia.data[i].cw[y]
   return (Number(cw.grade) * Number(cw.weight) / Number(cw.maxGrade)).toFixed(2)
 }
+
 const resetTempVars = () => {
   courseworkModal.value = false
   subjectModal.value = false
   subName.value = ""
   cwName.value = ""
   cwWeight.value = ""
+}
+
+const updateFirestore = async () => {
+  const db = getFirestore()
+  for (let i = 0; i < pinia.data.length; i++) {
+    const docRef = doc(db, 'users', pinia.user.email, 'data', i.toString())
+    await setDoc(docRef, { data: pinia.data[i] })
+  }
 }
 
 const addCoursework = (i: number) => {
@@ -61,26 +113,48 @@ const addCoursework = (i: number) => {
     grade: "0",
     maxGrade: "100"
   })
+  updateFirestore()
   resetTempVars()
 }
+
 const addSubject = () => {
   pinia.data.push({
     name: subName.value,
+    target: target.value ?? "A",
     cw: []
   })
+  updateFirestore()
   resetTempVars()
+}
+
+const deleteSubject = async (i: number) => {
+  const db = getFirestore()
+  pinia.data.splice(i, 1)
+  await deleteDoc(doc(db, 'users', pinia.user.email, 'data', pinia.data.length.toString()))
+  updateFirestore()
+}
+
+const deleteCoursework = async (i: number, y: number) => {
+  const db = getFirestore()
+  pinia.data[i].cw.splice(y, 1)
+  await deleteDoc(doc(db, 'users', pinia.user.email, 'data', i.toString(), 'cw', y.toString()))
+  updateFirestore()
 }
 </script>
 
 <template>
-  <n-tooltip>
-    <template #trigger>
-      <n-button @click="subjectModal = !subjectModal">
-        <i-ic:round-add />
-      </n-button>
-    </template>
-    Add Subject
-  </n-tooltip>
+  <div class="flex justify-center">
+    <div class="max-w-600px flex justify-around">
+      <n-tooltip>
+        <template #trigger>
+          <n-button @click="subjectModal = !subjectModal">
+            <i-ic:round-add />
+          </n-button>
+        </template>
+        Add Subject
+      </n-tooltip>
+    </div>
+  </div>
 
   <n-modal :show="subjectModal" @mask-click="resetTempVars"
     style="position: fixed; left: 50%; transform: translateX(-50%); top: 100px">
@@ -88,7 +162,12 @@ const addSubject = () => {
       <n-form-item label="Name">
         <n-input v-model:value="subName"></n-input>
       </n-form-item>
-      <n-button v-if="subName != ''" @click="addSubject">Add</n-button>
+      <n-form-item label="Target Grade">
+        <n-dropdown @select="handleSelect" :options="targetOptions">
+          <n-button>{{ target }}</n-button>
+        </n-dropdown>
+      </n-form-item>
+      <n-button @click="addSubject">Add</n-button>
     </n-card>
   </n-modal>
 
@@ -128,7 +207,7 @@ const addSubject = () => {
                 </n-tooltip>
                 <n-tooltip>
                   <template #trigger>
-                    <n-button @click="pinia.data.splice(i, 1)">
+                    <n-button @click="deleteSubject(i)">
                       <i-ic:round-delete style="font-size: 20px;" />
                     </n-button>
                   </template>
@@ -138,7 +217,7 @@ const addSubject = () => {
 
               <div class="flex"></div>
               Marks Required in finals to get <div class="w-[45px]">
-                <n-input placeholder="" v-model:value="target" />
+                <n-input placeholder="" v-model:value="pinia.data[i].target" />
               </div>
               <div class="flex justify-center mt-4 mb-5">
                 <n-progress v-if="percentage(i) >= 40 && percentage(i) <= 100" type="circle"
@@ -149,7 +228,7 @@ const addSubject = () => {
                 <div v-if="percentage(i) > 100 && target != ''">
                   <n-alert type="warning">
                     <template #header>
-                      Not possible to get {{ target }}
+                      Not possible to get {{ pinia.data[i].target }}
                     </template>
                   </n-alert>
                 </div>
@@ -167,7 +246,7 @@ const addSubject = () => {
                   <template #header-extra>
                     <n-tooltip>
                       <template #trigger>
-                        <n-button @click="pinia.data[i].cw.splice(y, 1)">
+                        <n-button @click="deleteCoursework(i, y)">
                           <i-ic:round-close />
                         </n-button>
                       </template>

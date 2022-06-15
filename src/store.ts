@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
-import { useStorage } from '@vueuse/core'
 
 export  const store = defineStore('store', {
   state: () => ({
     user: {} as any,
-    data: useStorage('data', [] as {
+    data: [] as {
       name: string,
+      target: string,
       cw: any
-    }[]),
+    }[],
     scale: {
       Ap: 90,
       A: 80,
