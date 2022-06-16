@@ -47,9 +47,11 @@ const forgotPassword = async () => {
         <n-button @click="forgotPassword" class="mt-3">
           Reset Email
         </n-button>
-        <n-button @click="emits('login')" class="mt-3">
-          Back
-        </n-button>
+      </div>
+      <div class="flex justify-end mt-3 text-size-[12px]">
+        <p>
+          <button @click="emits('login')"><a>Login here</a></button>
+        </p>
       </div>
     </n-card>
   </div>

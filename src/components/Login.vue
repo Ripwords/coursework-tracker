@@ -12,24 +12,19 @@ const notification = useNotification()
 
 const email = ref("")
 const password = ref("")
-const loading = ref(false)
 const { enter } = useMagicKeys()
 
 const reset = () => {
   email.value = ""
   password.value = ""
-  if (loading.value) {
-    loading.value = false
-    loadingBar.finish()
-  }
 }
 
 const signIn = async () => {
-  loading.value = true
   loadingBar.start()
   signInWithEmailAndPassword(getAuth(), email.value, password.value)
     .then(async () => {
       reset()
+      loadingBar.finish()
       emits("signedIn")
       notification['success']({
         content: 'Signed in!',
@@ -39,6 +34,7 @@ const signIn = async () => {
     })
     .catch(error => {
       reset()
+      loadingBar.error()
       pinia.user = {}
       errorHandler(error.code)
       notification['warning']({

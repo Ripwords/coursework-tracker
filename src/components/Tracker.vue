@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { deleteDoc, doc, getFirestore, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getFirestore } from 'firebase/firestore';
+import { returnGrade, targetOptions, updateFirestore } from '../functions';
 import { store } from '../store'
 
 const pinia = store()
@@ -9,70 +10,14 @@ const subName = ref("")
 const cwName = ref("")
 const cwWeight = ref("")
 const target = ref("A")
-const targetOptions = [
-  {
-    label: "A+",
-    key: "A+"
-  },
-  {
-    label: "A",
-    key: "A"
-  },
-  {
-    label: "A-",
-    key: "A-"
-  },
-  {
-    label: "B+",
-    key: "B+"
-  },
-  {
-    label: "B",
-    key: "B"
-  },
-  {
-    label: "B-",
-    key: "B-"
-  },
-  {
-    label: "C+",
-    key: "C+"
-  },
-  {
-    label: "C",
-    key: "C"
-  },
-  {
-    label: "D",
-    key: "D"
-  }
-]
+
 const handleSelect = (key: string) => {
   target.value = key
 }
+
 const getGrade = () => {
   target.value = target.value.toUpperCase()
-  if (target.value === "A+") {
-    return pinia.scale.Ap
-  } else if (target.value === "A") {
-    return pinia.scale.A
-  } else if (target.value === "A-") {
-    return pinia.scale.Am
-  } else if (target.value === "B+") {
-    return pinia.scale.Bp
-  } else if (target.value === "B") {
-    return pinia.scale.B
-  } else if (target.value === "B-") {
-    return pinia.scale.Bm
-  } else if (target.value === "C+") {
-    return pinia.scale.C
-  } else if (target.value === "C") {
-    return pinia.scale.C
-  } else if (target.value === "D") {
-    return pinia.scale.D
-  } else {
-    return 80
-  }
+  return returnGrade(target.value, pinia)
 }
 
 const percentage = (i: number) => {
@@ -85,6 +30,7 @@ const percentage = (i: number) => {
   const required = (getGrade() - sum) * 100 / (100 - cw.reduce((a: any, b: any) => a + Number(b.weight), 0))
   return Math.round(required)
 }
+
 const getScore = (i: number, y: number) => {
   const cw = pinia.data[i].cw[y]
   return (Number(cw.grade) * Number(cw.weight) / Number(cw.maxGrade)).toFixed(2)
@@ -98,14 +44,6 @@ const resetTempVars = () => {
   cwWeight.value = ""
 }
 
-const updateFirestore = async () => {
-  const db = getFirestore()
-  for (let i = 0; i < pinia.data.length; i++) {
-    const docRef = doc(db, 'users', pinia.user.email, 'data', i.toString())
-    await setDoc(docRef, { data: pinia.data[i] })
-  }
-}
-
 const addCoursework = (i: number) => {
   pinia.data[i].cw.push({
     name: cwName.value,
@@ -113,7 +51,7 @@ const addCoursework = (i: number) => {
     grade: "0",
     maxGrade: "100"
   })
-  updateFirestore()
+  updateFirestore(pinia)
   resetTempVars()
 }
 
@@ -123,7 +61,7 @@ const addSubject = () => {
     target: target.value ?? "A",
     cw: []
   })
-  updateFirestore()
+  updateFirestore(pinia)
   resetTempVars()
 }
 
@@ -131,14 +69,14 @@ const deleteSubject = async (i: number) => {
   const db = getFirestore()
   pinia.data.splice(i, 1)
   await deleteDoc(doc(db, 'users', pinia.user.email, 'data', pinia.data.length.toString()))
-  updateFirestore()
+  updateFirestore(pinia)
 }
 
 const deleteCoursework = async (i: number, y: number) => {
   const db = getFirestore()
   pinia.data[i].cw.splice(y, 1)
   await deleteDoc(doc(db, 'users', pinia.user.email, 'data', i.toString(), 'cw', y.toString()))
-  updateFirestore()
+  updateFirestore(pinia)
 }
 </script>
 

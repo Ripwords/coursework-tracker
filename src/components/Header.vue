@@ -1,28 +1,14 @@
 <script lang="ts" setup>
-import { useNotification } from 'naive-ui'
+import { useNotification, useLoadingBar } from 'naive-ui'
 import { Auth, getAuth, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth'
 import { store } from '../store'
-import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from 'firebase/firestore'
+import { hydratePiniaFromFirestore } from '../functions'
 
 let auth: Auth
 const pinia = store()
 const notification = useNotification()
 const props = defineProps(["theme"])
-const emits = defineEmits(["themeChange", "signedOut", "signedIn"])
-
-const hydratePiniaFromFirestore = async () => {
-  const db = getFirestore()
-  const docRef = collection(db, 'users', pinia.user.email, "data")
-  const docSnap = await getDocs(docRef)
-
-  if (!docSnap.empty) {
-    const returnData = docSnap.docs.map(doc => doc.data())
-    const returnDataArray = returnData.map(item => Object.values(item)[0])
-    pinia.data = returnDataArray
-  } else {
-    await setDoc(doc(db, 'users', pinia.user.email), { init: "_" })
-  }
-}
+const emits = defineEmits(["themeChange", "signedOut", "signedIn", "spinStart", "spinEnd"])
 
 const logout = () => {
   signOut(auth).then(() => {
@@ -31,21 +17,16 @@ const logout = () => {
       duration: 3000,
     })
     pinia.data = []
+    pinia.user = {}
     emits("signedOut")
   })
 }
 
 onMounted(() => {
   auth = getAuth()
-  if (auth.currentUser) {
-    pinia.user = auth.currentUser
-    hydratePiniaFromFirestore()
-  }
   getRedirectResult(auth)
-    .then((result) => {
+    .then(async (result) => {
       if (result?.user) {
-        pinia.user = result.user
-        hydratePiniaFromFirestore()        
         emits("signedIn")
         notification['success']({
           content: 'Signed in!',
@@ -53,10 +34,12 @@ onMounted(() => {
         })
       }
     })
-  onAuthStateChanged(auth, user => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
+      emits("spinStart")
       pinia.user = user
-      hydratePiniaFromFirestore()
+      await hydratePiniaFromFirestore(pinia)
+      emits("spinEnd")
     } else {
       pinia.user = {}
     }
@@ -65,17 +48,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mt-2 flex justify-center">
-    <div class="max-w-600px flex justify-around">
+  <div class="flex justify-center">
+    <div class="max-w-600px flex justify-around items-center">
       <n-button @click="emits('themeChange')">
         <i-ic:round-light-mode v-if="!props.theme" />
         <i-ic:round-dark-mode v-else />
       </n-button>
-      <div class="mx-15">
-        <n-h2>
-          Coursework Tracker
-        </n-h2>
-      </div>
+      <n-h2 class="mx-15 text-center">
+        Coursework Tracker
+      </n-h2>
       <n-button @click="logout" :disabled="Object.keys(pinia.user).length == 0">
         <i-ic:round-logout />
       </n-button>
