@@ -77,12 +77,12 @@ watch(enter, (v) => {
       </div>
       <div class="flex justify-end mt-3 text-size-[12px]">
         <p>Don't have an account?
-          <button @click="emits('register')"><a>Register here</a></button>
+          <button @click="emits('register')"><a class="blue">Register here</a></button>
         </p>
       </div>
       <div class="flex justify-end mt-3 text-size-[12px]">
         <p>
-          <button @click="emits('forgot')"><a>Forgot password?</a></button>
+          <button @click="emits('forgot')"><a class="blue">Forgot password?</a></button>
         </p>
       </div>
     </n-card>

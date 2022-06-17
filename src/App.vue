@@ -43,6 +43,7 @@ watch(() => pinia.user, () => {
 <style>
 
 
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 body::-webkit-scrollbar {
   display: none;
@@ -57,7 +58,7 @@ input {
   font-size: 16px !important;
 }
 
-a {
+.blue {
   color: #346ed3 !important;
 }
 </style>

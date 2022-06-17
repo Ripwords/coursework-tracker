@@ -50,7 +50,7 @@ const forgotPassword = async () => {
       </div>
       <div class="flex justify-end mt-3 text-size-[12px]">
         <p>
-          <button @click="emits('login')"><a>Login here</a></button>
+          <button @click="emits('login')"><a class="blue">Login here</a></button>
         </p>
       </div>
     </n-card>

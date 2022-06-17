@@ -24,6 +24,12 @@ const reset = () => {
   }
 }
 
+const verifyEmail = async (user: any) => {
+  await sendEmailVerification(user, {
+    url: import.meta.env.PROD ? 'https://cw-tracker.netlify.app/' : 'http://localhost:3000/'
+  })
+}
+
 const register = async () => {
   if (email.value == '' || password.value == '' || passwordConfirm.value == '') {
     notification['warning']({
@@ -40,6 +46,7 @@ const register = async () => {
       loading.value = true
       const created = await createUserWithEmailAndPassword(getAuth(), email.value, password.value)
       if (getAuth().currentUser && created) {
+        await verifyEmail(getAuth().currentUser)
         notification['success']({
           content: 'Account created!',
           meta: 'Verify your email, and check your spam folder!',
@@ -92,13 +99,13 @@ watch(enter, (v) => {
         <n-button class="mt-3" @click="register" :disabled="!email || !password">
           Register
         </n-button>
-        <n-button class="mt-3" @click="signInGoogle">
+        <n-button class="mt-3" @click="signInGoogle()">
           <i-carbon:logo-google />
         </n-button>
       </div>
       <div class="flex justify-end mt-3 text-size-[12px]">
         <p>Already have an account?
-          <button @click="reset(); emits('login')"><a>Login here</a></button>
+          <button @click="reset(); emits('login')"><a class="blue">Login here</a></button>
         </p>
       </div>
     </n-card>
