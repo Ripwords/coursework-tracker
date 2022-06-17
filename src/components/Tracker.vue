@@ -158,7 +158,7 @@ const deleteCoursework = async (i: number, y: number) => {
               <div class="flex"></div>
               Marks Required in finals to get
               <div class="w-[45px]">
-                <n-input placeholder="" v-model:value="pinia.data[i].target" @input="updateFirestore(pinia)" />
+                <n-input placeholder="" v-model:value="pinia.data[i].target" @update:value="updateFirestore(pinia)" />
               </div>
               <div class="flex justify-center mt-4 mb-5">
                 <n-progress v-if="percentage(i) >= 40 && percentage(i) <= 100" type="circle"
@@ -197,19 +197,19 @@ const deleteCoursework = async (i: number, y: number) => {
                   <div class="flex justify-between">
                     <n-form-item label="Weight">
                       <n-input type="number" v-model:value="pinia.data[i].cw[y].weight"
-                        @input="updateFirestore(pinia)" />
+                        @update:value="updateFirestore(pinia)" />
                     </n-form-item>
                   </div>
                   <div class="flex justify-between">
                     <n-form-item label="Grade">
                       <n-input type="number" v-model:value="pinia.data[i].cw[y].grade"
-                        @input="updateFirestore(pinia)" />
+                        @update:value="updateFirestore(pinia)" />
                     </n-form-item>
                   </div>
                   <div class="flex justify-between">
                     <n-form-item label="Max Grade">
                       <n-input type="number" v-model:value="pinia.data[i].cw[y].maxGrade"
-                        @input="updateFirestore(pinia)" />
+                        @update:value="updateFirestore(pinia)" />
                     </n-form-item>
                   </div>
                   <div class="flex justify-between">
