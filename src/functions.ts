@@ -114,12 +114,37 @@ export const returnGrade = (grade: string, pinia: any) => {
   } else if (grade === "B-") {
     return pinia.scale.Bm
   } else if (grade === "C+") {
-    return pinia.scale.C
+    return pinia.scale.Cp
   } else if (grade === "C") {
     return pinia.scale.C
   } else if (grade === "D") {
     return pinia.scale.D
   } else {
     return 80
+  }
+}
+
+export const targetInScale = (grade: string, pinia: any) => {
+  // check if the given target is in pinia.data.scale
+  if (grade === "A+") {
+    return pinia.scale.Ap
+  } else if (grade === "A") {
+    return pinia.scale.A
+  } else if (grade === "A-") {
+    return pinia.scale.Am
+  } else if (grade === "B+") {
+    return pinia.scale.Bp
+  } else if (grade === "B") {
+    return pinia.scale.B
+  } else if (grade === "B-") {
+    return pinia.scale.Bm
+  } else if (grade === "C+") {
+    return pinia.scale.Cp
+  } else if (grade === "C") {
+    return pinia.scale.C
+  } else if (grade === "D") {
+    return pinia.scale.D
+  } else {
+    return null
   }
 }

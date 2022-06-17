@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { deleteDoc, doc, getFirestore } from 'firebase/firestore';
-import { returnGrade, targetOptions, updateFirestore } from '../functions';
+import { returnGrade, targetOptions, updateFirestore, targetInScale } from '../functions';
 import { store } from '../store'
 
 const pinia = store()
@@ -15,19 +15,20 @@ const handleSelect = (key: string) => {
   target.value = key
 }
 
-const getGrade = () => {
-  target.value = target.value.toUpperCase()
-  return returnGrade(target.value, pinia)
+const getGrade = (target: string) => {
+  target = target.toUpperCase()
+  return returnGrade(target, pinia)
 }
 
 const percentage = (i: number) => {
+  pinia.data[i].target = pinia.data[i].target.toUpperCase()
   const cw = pinia.data[i].cw
   const grades = cw.map((c: any) => Number(c.weight) * (Number(c.grade) / Number(c.maxGrade)))
   const sum = grades.reduce((a: any, b: any) => a + b, 0)
   if (isNaN(sum)) {
     return 0
   }
-  const required = (getGrade() - sum) * 100 / (100 - cw.reduce((a: any, b: any) => a + Number(b.weight), 0))
+  const required = (getGrade(pinia.data[i].target) - sum) * 100 / (100 - cw.reduce((a: any, b: any) => a + Number(b.weight), 0))
   return Math.round(required)
 }
 
@@ -42,6 +43,7 @@ const resetTempVars = () => {
   subName.value = ""
   cwName.value = ""
   cwWeight.value = ""
+  target.value = "A"
 }
 
 const addCoursework = (i: number) => {
@@ -154,7 +156,8 @@ const deleteCoursework = async (i: number, y: number) => {
               </template>
 
               <div class="flex"></div>
-              Marks Required in finals to get <div class="w-[45px]">
+              Marks Required in finals to get
+              <div class="w-[45px]">
                 <n-input placeholder="" v-model:value="pinia.data[i].target" />
               </div>
               <div class="flex justify-center mt-4 mb-5">
@@ -166,7 +169,12 @@ const deleteCoursework = async (i: number, y: number) => {
                 <div v-if="percentage(i) > 100 && target != ''">
                   <n-alert type="warning">
                     <template #header>
-                      Not possible to get {{ pinia.data[i].target }}
+                      <div v-if="targetInScale(pinia.data[i].target.toUpperCase(), pinia)">
+                        Not possible to get {{ pinia.data[i].target }}
+                      </div>
+                      <div v-else>
+                        Not possible to get A
+                      </div>
                     </template>
                   </n-alert>
                 </div>
