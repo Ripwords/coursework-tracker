@@ -112,7 +112,7 @@ const deleteCoursework = async (i: number, y: number) => {
   </n-modal>
 
   <div class="flex justify-center">
-    <n-collapse class="max-w-[500px] mt-3">
+    <n-collapse class="max-w-[500px] mt-3 mb-4">
       <n-card>
         <n-collapse-item v-for="(d, i) in pinia.data" key="i">
           <n-modal :show="courseworkModal" @mask-click="resetTempVars"

@@ -62,12 +62,12 @@ onMounted(() => {
       </n-button>
     </div>
   </div>
-  <div class="fixed left-3 bottom-0">
+  <div class="fixed left-4 bottom-0">
     <n-h6>
       {{ pinia.user.email }}
     </n-h6>
   </div>
-  <div class="fixed right-3 bottom-3">
+  <div class="fixed right-4 bottom-3">
     <a href="https://github.com/Ripwords/coursework-tracker" target="_blank">
       <i-mdi:github style="font-size: 35px;" />
     </a>

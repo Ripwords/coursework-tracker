@@ -41,19 +41,15 @@ watch(() => pinia.user, () => {
 </template>
 
 <style>
-
-
-
-/* Hide scrollbar for Chrome, Safari and Opera */
 body::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
 input {
   font-size: 16px !important;
 }
