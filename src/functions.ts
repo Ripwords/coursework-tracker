@@ -31,12 +31,23 @@ export const hydratePiniaFromFirestore = async (pinia: any) => {
   }
 }
 
+export const updateFirestoreData = async (pinia: any, i: number) => {
+  const db = getFirestore()
+  const docRef = doc(db, 'users', pinia.user.email, 'data', i.toString())
+  await setDoc(docRef, { data: pinia.data[i] })
+}
+
 export const updateFirestore = async (pinia: any) => {
   const db = getFirestore()
   for (let i = 0; i < pinia.data.length; i++) {
     const docRef = doc(db, 'users', pinia.user.email, 'data', i.toString())
-    await setDoc(docRef, { data: pinia.data[i] })
+    try {
+      await setDoc(docRef, { data: pinia.data[i] })
+    } catch (err) {
+      return false
+    }
   }
+  return true
 }
 
 export const errorHandler = (error: string) => {

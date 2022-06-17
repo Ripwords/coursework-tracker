@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { deleteDoc, doc, getFirestore } from 'firebase/firestore';
-import { returnGrade, targetOptions, updateFirestore, targetInScale } from '../functions';
+import { returnGrade, targetOptions, updateFirestore, targetInScale, updateFirestoreData } from '../functions';
 import { store } from '../store'
+import { useLoadingBar } from 'naive-ui'
 
+const loading = useLoadingBar()
 const pinia = store()
 const courseworkModal = ref(false)
 const subjectModal = ref(false)
@@ -158,7 +160,8 @@ const deleteCoursework = async (i: number, y: number) => {
               <div class="flex"></div>
               Marks Required in finals to get
               <div class="w-[45px]">
-                <n-input placeholder="" v-model:value="pinia.data[i].target" @update:value="updateFirestore(pinia)" />
+                <n-input placeholder="" v-model:value="pinia.data[i].target"
+                  @update:value="updateFirestoreData(pinia, i)" />
               </div>
               <div class="flex justify-center mt-4 mb-5">
                 <n-progress v-if="percentage(i) >= 40 && percentage(i) <= 100" type="circle"
@@ -197,19 +200,19 @@ const deleteCoursework = async (i: number, y: number) => {
                   <div class="flex justify-between">
                     <n-form-item label="Weight">
                       <n-input type="number" v-model:value="pinia.data[i].cw[y].weight"
-                        @update:value="updateFirestore(pinia)" />
+                        @update:value="updateFirestoreData(pinia, i)" />
                     </n-form-item>
                   </div>
                   <div class="flex justify-between">
                     <n-form-item label="Grade">
                       <n-input type="number" v-model:value="pinia.data[i].cw[y].grade"
-                        @update:value="updateFirestore(pinia)" />
+                        @update:value="updateFirestoreData(pinia, i)" />
                     </n-form-item>
                   </div>
                   <div class="flex justify-between">
                     <n-form-item label="Max Grade">
                       <n-input type="number" v-model:value="pinia.data[i].cw[y].maxGrade"
-                        @update:value="updateFirestore(pinia)" />
+                        @update:value="updateFirestoreData(pinia, i)" />
                     </n-form-item>
                   </div>
                   <div class="flex justify-between">

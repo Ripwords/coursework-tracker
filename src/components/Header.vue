@@ -64,7 +64,7 @@ onMounted(() => {
   </div>
   <div class="fixed left-4 bottom-0">
     <n-h6>
-      {{ pinia.user.email }}
+      {{ pinia.user.email?.split("@")[0] }}
     </n-h6>
   </div>
   <div class="fixed right-4 bottom-3">
