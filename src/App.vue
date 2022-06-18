@@ -1,21 +1,30 @@
 <script lang="ts" setup>
+import { useTimeout } from '@vueuse/core';
+import { getAuth } from 'firebase/auth';
 import { darkTheme } from 'naive-ui'
 import { store } from './store'
 
 const pinia = store()
-const page = ref('login')
+const page = ref('loading')
 const spinner = ref(false)
 pinia.user = {}
-
 
 const theme = ref<any>(darkTheme)
 const toggleTheme = () => {
   theme.value = theme.value ? null : darkTheme
 }
+const { ready, start, stop } = useTimeout(1000, { controls: true })
 
+if (page.value == 'loading') {
+  start()
+}
 watch(() => pinia.user, () => {
+  if (page.value == 'loading') {
+    stop()
+  }
   page.value = Object.keys(pinia.user).length > 0 ? 'tracker' : 'login'
 })
+
 </script>
 
 <template>
@@ -24,6 +33,7 @@ watch(() => pinia.user, () => {
       <n-notification-provider>
         <Header :theme="theme" @themeChange="toggleTheme" @signedIn="page='tracker'" @signedOut="page='login'"
           @spinStart="spinner=true" @spinEnd="spinner=false" />
+        <Loading v-if="page == 'loading'" />
         <Login v-if="page == 'login'" @signedIn="page='tracker'" @register="page='register'" @forgot="page='forgot'" />
         <Register v-else-if="page == 'register'" @login="page='login'" />
         <div v-else-if="page == 'tracker'">
@@ -32,7 +42,7 @@ watch(() => pinia.user, () => {
           </div>
           <Tracker v-else />
         </div>
-        <Forgot v-else @login="page='login'" />
+        <Forgot v-else-if="page == 'forgot'" @login="page='login'" />
       </n-notification-provider>
     </n-loading-bar-provider>
     <ReloadPrompt />
