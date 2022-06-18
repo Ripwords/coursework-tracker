@@ -7,13 +7,13 @@ import { store } from './store'
 const pinia = store()
 const page = ref('loading')
 const spinner = ref(false)
-pinia.user = {}
+pinia.user = ''
 
 const theme = ref<any>(darkTheme)
 const toggleTheme = () => {
   theme.value = theme.value ? null : darkTheme
 }
-const { ready, start, stop } = useTimeout(1000, { controls: true })
+const { start, stop } = useTimeout(1000, { controls: true })
 
 if (page.value == 'loading') {
   start()
