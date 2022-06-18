@@ -1,7 +1,7 @@
 {
   "name": "coursework-tracker",
   "private": true,
-  "version": "1.2.2",
+  "version": "1.3.0",
   "scripts": {
     "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",

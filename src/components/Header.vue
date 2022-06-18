@@ -57,9 +57,16 @@ onMounted(() => {
       <n-h2 class="mx-15 text-center">
         Coursework Tracker
       </n-h2>
-      <n-button @click="logout" :disabled="Object.keys(pinia.user).length == 0">
-        <i-ic:round-logout />
-      </n-button>
+      <n-tooltip>
+        <template #trigger>
+          <n-button @click="logout" :disabled="Object.keys(pinia.user).length == 0">
+            <i-ic:round-logout />
+          </n-button>
+        </template>
+        <div v-if="Object.keys(pinia.user).length != 0">
+          Logout of {{ pinia.user.email?.split("@")[0] }}?
+        </div>
+      </n-tooltip>
     </div>
   </div>
   <div class="fixed left-4 bottom-0">
