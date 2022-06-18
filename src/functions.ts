@@ -1,5 +1,5 @@
 import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup } from 'firebase/auth'
-import { collection, doc, getDocs, getFirestore, setDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, getFirestore, onSnapshot, query, setDoc, where } from 'firebase/firestore'
 
 export const signInGoogle = async () => {
   const provider = new GoogleAuthProvider()
@@ -48,6 +48,16 @@ export const updateFirestore = async (pinia: any) => {
     }
   }
   return true
+}
+
+export const unsub = (pinia: any) => {
+  const db = getFirestore()
+  const q = query(collection(db, 'users', pinia.user.email, 'data'))
+  onSnapshot(q, (snapshot) => {
+    const data = snapshot.docs.map(doc => doc.data())
+    const dataArray = data.map(item => Object.values(item)[0])
+    pinia.data = dataArray
+  })
 }
 
 export const errorHandler = (error: string) => {

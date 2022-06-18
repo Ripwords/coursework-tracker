@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { useTimeout } from '@vueuse/core';
-import { getAuth } from 'firebase/auth';
+import { useTimeout } from '@vueuse/core'
 import { darkTheme } from 'naive-ui'
 import { store } from './store'
 
@@ -24,7 +23,6 @@ watch(() => pinia.user, () => {
   }
   page.value = Object.keys(pinia.user).length > 0 ? 'tracker' : 'login'
 })
-
 </script>
 
 <template>

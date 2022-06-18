@@ -2,7 +2,7 @@
 import { useNotification, useLoadingBar } from 'naive-ui'
 import { Auth, getAuth, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth'
 import { store } from '../store'
-import { hydratePiniaFromFirestore } from '../functions'
+import { hydratePiniaFromFirestore, unsub } from '../functions'
 
 let auth: Auth
 const pinia = store()
@@ -40,6 +40,7 @@ onMounted(() => {
       pinia.user = user
       await hydratePiniaFromFirestore(pinia)
       emits("spinEnd")
+      unsub(pinia)
     } else {
       pinia.user = {}
     }
