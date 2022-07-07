@@ -2,9 +2,6 @@
 import { deleteDoc, doc, getFirestore } from 'firebase/firestore';
 import { returnGrade, targetOptions, updateFirestore, targetInScale, updateFirestoreData } from '../functions';
 import { store } from '../store'
-import { useLoadingBar } from 'naive-ui'
-
-const loading = useLoadingBar()
 const pinia = store()
 const courseworkModal = ref(false)
 const subjectModal = ref(false)
@@ -241,21 +238,8 @@ const deleteCoursework = async (i: number, y: number) => {
 </template>
 
 <style scoped>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.list-move, /* apply transition to moving elements */
+.list-move,
+/* apply transition to moving elements */
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
@@ -273,7 +257,8 @@ const deleteCoursework = async (i: number, y: number) => {
   position: absolute;
 }
 
-.sublist-move, /* apply transition to moving elements */
+.sublist-move,
+/* apply transition to moving elements */
 .sublist-enter-active,
 .sublist-leave-active {
   transition: all 0.5s ease;
