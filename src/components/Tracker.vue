@@ -14,6 +14,11 @@ const handleSelect = (key: string) => {
   target.value = key
 }
 
+const updateSelect = (key: number, event: string) => {
+  pinia.data[key].target = event
+  updateFirestoreData(pinia, key)
+}
+
 const getGrade = (target: string) => {
   target = target.toUpperCase()
   return returnGrade(target, pinia)
@@ -164,9 +169,13 @@ const deleteCoursework = async (i: number, y: number) => {
                 <div class="flex"></div>
                 Marks Required in finals to get
                 <div class="w-[45px]">
-                  <n-input placeholder="" v-model:value="pinia.data[i].target"
-                    @update:value="updateFirestoreData(pinia, i)" />
+                  <!-- <n-input placeholder="" v-model:value="pinia.data[i].target"
+                    @update:value="updateFirestoreData(pinia, i)" /> -->
+                  <n-dropdown @select="(event: any) => updateSelect(i, event)" :options="targetOptions">
+                    <n-button>{{ pinia.data[i].target }}</n-button>
+                  </n-dropdown>
                 </div>
+
                 <div class="flex justify-center mt-4 mb-5">
                   <n-progress v-if="percentage(i) >= 40 && percentage(i) <= 100" type="circle"
                     :percentage="percentage(i)" />
