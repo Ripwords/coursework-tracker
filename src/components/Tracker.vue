@@ -9,12 +9,6 @@ const subName = ref("")
 const cwName = ref("")
 const cwWeight = ref("")
 const target = ref("A")
-const trigger = ref()
-
-const unfocus = () => {
-  trigger.value.blur()
-  console.log("YO")
-}
 
 const handleSelect = (key: string) => {
   target.value = key
@@ -177,9 +171,8 @@ const deleteCoursework = async (i: number, y: number) => {
                 <div class="w-[45px]">
                   <!-- <n-input placeholder="" v-model:value="pinia.data[i].target"
                     @update:value="updateFirestoreData(pinia, i)" /> -->
-                  <n-dropdown @select="(event: any) => updateSelect(i, event)" :options="targetOptions"
-                    @clickOutside="unfocus">
-                    <n-button ref="trigger">{{ pinia.data[i].target }}</n-button>
+                  <n-dropdown @select="(event: any) => updateSelect(i, event)" :options="targetOptions">
+                    <n-button :focusable="false">{{ pinia.data[i].target }}</n-button>
                   </n-dropdown>
                 </div>
 
