@@ -85,39 +85,39 @@ export const errorHandler = (error: string) => {
 export const targetOptions = [
   {
     label: "A+",
-    key: "A+"
+    value: "A+"
   },
   {
     label: "A",
-    key: "A"
+    value: "A"
   },
   {
     label: "A-",
-    key: "A-"
+    value: "A-"
   },
   {
     label: "B+",
-    key: "B+"
+    value: "B+"
   },
   {
     label: "B",
-    key: "B"
+    value: "B"
   },
   {
     label: "B-",
-    key: "B-"
+    value: "B-"
   },
   {
     label: "C+",
-    key: "C+"
+    value: "C+"
   },
   {
     label: "C",
-    key: "C"
+    value: "C"
   },
   {
     label: "D",
-    key: "D"
+    value: "D"
   }
 ]
 

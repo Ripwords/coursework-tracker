@@ -10,21 +10,6 @@ const cwName = ref("")
 const cwWeight = ref("")
 const target = ref("A")
 
-const targetOptions2 = computed(() => {
-  let options = []
-  for (let i = 0; i < targetOptions.length; i++) {
-    options.push({
-      label: targetOptions[i].label,
-      value: targetOptions[i].key
-    })
-  }
-  return options
-})
-
-const handleSelect = (key: string) => {
-  target.value = key
-}
-
 const getGrade = (target: string) => {
   target = target.toUpperCase()
   return returnGrade(target, pinia)
@@ -113,9 +98,9 @@ const deleteCoursework = async (i: number, y: number) => {
         <n-input v-model:value="subName"></n-input>
       </n-form-item>
       <n-form-item label="Target Grade">
-        <n-dropdown @select="handleSelect" :options="targetOptions">
-          <n-button>{{ target }}</n-button>
-        </n-dropdown>
+        <div class="w-[65px]">
+          <n-select v-model:value="target" :options="targetOptions"></n-select>
+        </div>
       </n-form-item>
       <n-button @click="addSubject">Add</n-button>
     </n-card>
@@ -175,7 +160,7 @@ const deleteCoursework = async (i: number, y: number) => {
                 <div class="flex"></div>
                 Marks Required in finals to get
                 <div class="w-[65px]">
-                  <n-select :options="targetOptions2" v-model:value="pinia.data[i].target"
+                  <n-select :options="targetOptions" v-model:value="pinia.data[i].target"
                     @update:value="updateFirestoreData(pinia, i)">
                   </n-select>
                 </div>
