@@ -10,13 +10,19 @@ const cwName = ref("")
 const cwWeight = ref("")
 const target = ref("A")
 
+const targetOptions2 = computed(() => {
+  let options = []
+  for (let i = 0; i < targetOptions.length; i++) {
+    options.push({
+      label: targetOptions[i].label,
+      value: targetOptions[i].key
+    })
+  }
+  return options
+})
+
 const handleSelect = (key: string) => {
   target.value = key
-}
-
-const updateSelect = (key: number, event: string) => {
-  pinia.data[key].target = event
-  updateFirestoreData(pinia, key)
 }
 
 const getGrade = (target: string) => {
@@ -168,12 +174,10 @@ const deleteCoursework = async (i: number, y: number) => {
 
                 <div class="flex"></div>
                 Marks Required in finals to get
-                <div class="w-[45px]">
-                  <!-- <n-input placeholder="" v-model:value="pinia.data[i].target"
-                    @update:value="updateFirestoreData(pinia, i)" /> -->
-                  <n-dropdown @select="(event: any) => updateSelect(i, event)" :options="targetOptions">
-                    <n-button :focusable="false">{{ pinia.data[i].target }}</n-button>
-                  </n-dropdown>
+                <div class="w-[65px]">
+                  <n-select :options="targetOptions2" v-model:value="pinia.data[i].target"
+                    @update:value="updateFirestoreData(pinia, i)">
+                  </n-select>
                 </div>
 
                 <div class="flex justify-center mt-4 mb-5">
