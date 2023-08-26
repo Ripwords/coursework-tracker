@@ -25,7 +25,6 @@ declare module '@vue/runtime-core' {
     NCollapse: typeof import('naive-ui')['NCollapse']
     NCollapseItem: typeof import('naive-ui')['NCollapseItem']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
-    NDropdown: typeof import('naive-ui')['NDropdown']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NGlobalStyle: typeof import('naive-ui')['NGlobalStyle']
     NH2: typeof import('naive-ui')['NH2']
